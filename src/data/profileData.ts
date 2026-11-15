@@ -459,7 +459,7 @@ export const CREDENTIALS: CredentialItem[] = [
     title: 'B.Sc. in Computer Studies (Software Development)',
     role: 'Norton University',
     organization: 'Foundation Year Distinguished Standing',
-    period: '2023 — Present',
+    period: '2024 — Present',
     badge: 'Education',
     description:
       'Undergraduate coursework and research in Artificial Intelligence, Software Engineering, and Distributed Systems.',

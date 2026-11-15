@@ -30,26 +30,170 @@
   }
 }
 
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(28px, -18px, 0) scale(1.06);
+  }
+}
+
+@keyframes floatReverse {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-24px, 22px, 0) scale(1.05);
+  }
+}
+
+.animate-orb-slow {
+  animation: floatSlow 11s ease-in-out infinite;
+}
+
+.animate-orb-reverse {
+  animation: floatReverse 13s ease-in-out infinite;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.bg-micro-grid {
+  background-size: 28px 28px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.024) 1px, transparent 1px);
+}
+
 .surface-card {
-  background: #111114;
+  background: rgba(17, 17, 20, 0.88);
+  backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.075);
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.03) inset;
-  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
 }
 
 .surface-card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 .surface-subcard {
-  background: #16161a;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: border-color 0.18s ease, background-color 0.18s ease;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(22, 22, 27, 0.92) 0%, rgba(16, 16, 20, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition:
+    border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.surface-subcard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(360px circle at 88% 12%, rgba(56, 189, 248, 0.07), transparent 65%);
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .surface-subcard:hover {
-  background: #19191e;
-  border-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.7);
+}
+
+.surface-subcard:hover::before {
+  opacity: 1;
+}
+
+/* Light mode adaptive overrides when .theme-light is active */
+.theme-light {
+  color-scheme: light;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+.theme-light .bg-micro-grid {
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+}
+
+.theme-light .surface-card {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: #e2e8f0;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 10px 30px -6px rgba(15, 23, 42, 0.05);
+}
+
+.theme-light .surface-card:hover {
+  border-color: #cbd5e1;
+}
+
+.theme-light .surface-subcard {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04);
+}
+
+.theme-light .surface-subcard::before {
+  background: radial-gradient(360px circle at 88% 12%, rgba(14, 165, 233, 0.08), transparent 65%);
+}
+
+.theme-light .surface-subcard:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 14px 28px -8px rgba(15, 23, 42, 0.09);
+}
+
+.theme-light .text-zinc-50,
+.theme-light .text-zinc-100,
+.theme-light .text-white {
+  color: #0f172a !important;
+}
+
+.theme-light .text-zinc-200,
+.theme-light .text-zinc-300 {
+  color: #334155 !important;
+}
+
+.theme-light .text-zinc-400,
+.theme-light .text-zinc-500 {
+  color: #64748b !important;
+}
+
+.theme-light .bg-\[\#0C0C0E\],
+.theme-light .bg-zinc-900,
+.theme-light .bg-zinc-900\/90,
+.theme-light .bg-zinc-900\/70,
+.theme-light .bg-zinc-900\/60,
+.theme-light .bg-zinc-900\/40 {
+  background-color: #f8fafc !important;
+}
+
+.theme-light .bg-zinc-800,
+.theme-light .bg-zinc-800\/90 {
+  background-color: #f1f5f9 !important;
+}
+
+.theme-light .border-zinc-800,
+.theme-light .border-zinc-800\/90,
+.theme-light .border-zinc-800\/80,
+.theme-light .border-zinc-800\/70,
+.theme-light .border-zinc-700,
+.theme-light .border-zinc-700\/70,
+.theme-light .border-zinc-600 {
+  border-color: #e2e8f0 !important;
 }
 
 ::-webkit-scrollbar {

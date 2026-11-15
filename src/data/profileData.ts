@@ -79,9 +79,9 @@ export interface CredentialItem {
 export const INITIAL_USER: GitHubUser = {
   login: 'Seavik2142',
   name: 'Mao Seavik',
-  avatar_url: 'https://avatars.githubusercontent.com/u/195069487?v=4',
+  avatar_url: '/profile.jpg',
   html_url: 'https://github.com/Seavik2142',
-  bio: 'AI Engineer and Backend Developer focused on fine-tuning open-source language models, building reliable Python APIs, and shipping full-stack web and mobile products.',
+  bio: 'Software developer based in Cambodia focused on fine-tuning open-source language models (Qwen2.5, PEFT/LoRA, GGUF), building conversational AI systems with Google Gemini, and architecting reliable backend services in Python and TypeScript.',
   location: 'Phnom Penh, Cambodia',
   blog: 'https://seavik-gamma.vercel.app/',
   public_repos: 23,

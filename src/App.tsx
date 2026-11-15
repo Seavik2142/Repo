@@ -12,9 +12,11 @@ import {
   GraduationCap,
   Linkedin,
   MapPin,
+  Moon,
   RefreshCw,
   Search,
   Star,
+  Sun,
 } from 'lucide-react';
 import {
   CLEAN_GITHUB_README_MARKDOWN,
@@ -53,9 +55,12 @@ export function App() {
   const [repoSearch, setRepoSearch] = useState<string>('');
   const [repoLang, setRepoLang] = useState<string>('All');
 
-  // Modals
+  // Modals & Theme
   const [isReadmeModalOpen, setIsReadmeModalOpen] = useState(false);
   const [copiedQuickReadme, setCopiedQuickReadme] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  const activeAvatar = isDarkMode ? '/profile-dark.jpg' : '/profile-light.jpg';
 
   const syncLiveProfile = async () => {
     setIsSyncing(true);
@@ -71,6 +76,7 @@ export function App() {
         setUser((prev) => ({
           ...prev,
           ...userData,
+          avatar_url: '/profile.jpg',
           name: userData.name || prev.name,
           bio: prev.bio,
         }));
@@ -164,8 +170,15 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090B] text-zinc-100 relative">
-      {/* Subtle top radial light */}
+    <div
+      className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${
+        isDarkMode ? 'bg-[#09090B] text-zinc-100' : 'theme-light bg-slate-50 text-zinc-900'
+      }`}
+    >
+      {/* Subtle Animated Ambient Background & Micro-Grid */}
+      <div className="pointer-events-none fixed inset-0 bg-micro-grid opacity-70" />
+      <div className="pointer-events-none fixed -top-32 left-1/4 w-[520px] h-[340px] rounded-full bg-sky-500/[0.06] blur-[120px] animate-orb-slow" />
+      <div className="pointer-events-none fixed top-1/3 right-12 w-[460px] h-[340px] rounded-full bg-emerald-500/[0.05] blur-[130px] animate-orb-reverse" />
       <div
         className="pointer-events-none fixed inset-x-0 top-0 h-96"
         style={{
@@ -175,7 +188,11 @@ export function App() {
       />
 
       {/* Sticky Top Header */}
-      <header className="sticky top-0 z-40 border-b border-zinc-800/80 bg-[#09090B]/85 backdrop-blur-md">
+      <header
+        className={`sticky top-0 z-40 border-b backdrop-blur-md transition-colors ${
+          isDarkMode ? 'border-zinc-800/80 bg-[#09090B]/85' : 'border-zinc-200 bg-white/85'
+        }`}
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <a
@@ -185,7 +202,7 @@ export function App() {
               className="flex items-center gap-3 group"
             >
               <img
-                src={user.avatar_url}
+                src={activeAvatar}
                 alt={user.name}
                 className="w-8 h-8 rounded-full ring-1 ring-zinc-700 object-cover"
               />
@@ -221,6 +238,24 @@ export function App() {
 
           <div className="flex items-center gap-2">
             <button
+              onClick={() => setIsDarkMode((d) => !d)}
+              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 text-xs font-medium transition-colors"
+            >
+              {isDarkMode ? (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-sky-400" />
+                  <span className="hidden sm:inline">Dark</span>
+                </>
+              ) : (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-amber-500" />
+                  <span className="hidden sm:inline">Light</span>
+                </>
+              )}
+            </button>
+
+            <button
               onClick={syncLiveProfile}
               disabled={isSyncing}
               title="Refresh GitHub data"
@@ -231,35 +266,57 @@ export function App() {
 
             <button
               onClick={() => setIsReadmeModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 text-xs font-medium transition-colors"
+              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 text-xs font-medium transition-colors"
             >
               <FileText className="w-3.5 h-3.5 text-zinc-400" />
-              <span>README.md</span>
+              <span className="hidden xs:inline sm:inline">README</span>
             </button>
 
             <a
               href="https://github.com/Seavik2142"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 font-medium text-xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 font-medium text-xs transition-colors"
             >
               <Github className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">GitHub</span>
             </a>
           </div>
         </div>
+
+        {/* Mobile Quick-Navigation Strip */}
+        <nav className="md:hidden border-t border-zinc-800/60 px-4 py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs font-medium text-zinc-400">
+          <a href="#overview" className="px-3 py-1.5 rounded-lg bg-zinc-900/70 border border-zinc-800/80 text-zinc-200 shrink-0">
+            Overview
+          </a>
+          <a href="#projects" className="px-3 py-1.5 rounded-lg bg-zinc-900/40 border border-zinc-800/60 hover:text-zinc-100 shrink-0">
+            Projects
+          </a>
+          <a href="#ai-models" className="px-3 py-1.5 rounded-lg bg-zinc-900/40 border border-zinc-800/60 hover:text-zinc-100 shrink-0">
+            AI Models
+          </a>
+          <a href="#telemetry" className="px-3 py-1.5 rounded-lg bg-zinc-900/40 border border-zinc-800/60 hover:text-zinc-100 shrink-0">
+            Activity
+          </a>
+          <a href="#stack" className="px-3 py-1.5 rounded-lg bg-zinc-900/40 border border-zinc-800/60 hover:text-zinc-100 shrink-0">
+            Tech Stack
+          </a>
+          <a href="#repositories" className="px-3 py-1.5 rounded-lg bg-zinc-900/40 border border-zinc-800/60 hover:text-zinc-100 shrink-0">
+            Repositories
+          </a>
+        </nav>
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+      <main className="relative z-10 max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8">
         {/* SECTION 1: EXECUTIVE HERO */}
-        <section id="overview" className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <section id="overview" className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
           {/* Left Identity Card (8 cols) */}
-          <div className="lg:col-span-8 surface-card rounded-2xl p-7 sm:p-9 flex flex-col justify-between">
+          <div className="lg:col-span-8 surface-card rounded-2xl p-5 sm:p-9 flex flex-col justify-between">
             <div>
               <div className="flex flex-col sm:flex-row sm:items-center gap-6">
                 <img
-                  src={user.avatar_url}
+                  src={activeAvatar}
                   alt={user.name}
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border border-zinc-800 shrink-0"
                 />

@@ -63,6 +63,7 @@ export interface TechSkill {
   category: 'AI & LLMs' | 'Backend & APIs' | 'Frontend & Mobile' | 'Data & DevOps';
   role: string;
   iconSlug?: string;
+  iconUrl?: string;
   level: 'Core' | 'Production' | 'Research';
 }
 
@@ -321,6 +322,7 @@ export const TECH_STACK: TechSkill[] = [
     category: 'Backend & APIs',
     role: 'Primary AI, Data Science & Backend Language',
     iconSlug: 'python',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
     level: 'Core',
   },
   {
@@ -328,6 +330,7 @@ export const TECH_STACK: TechSkill[] = [
     category: 'AI & LLMs',
     role: 'Deep Learning & Neural Network Training',
     iconSlug: 'pytorch',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytorch/pytorch-original.svg',
     level: 'Core',
   },
   {
@@ -335,60 +338,70 @@ export const TECH_STACK: TechSkill[] = [
     category: 'AI & LLMs',
     role: 'Deep Learning Models & Production ML Pipelines',
     iconSlug: 'tensorflow',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg',
     level: 'Core',
   },
   {
     name: 'Hugging Face',
     category: 'AI & LLMs',
     role: 'Transformers, Model Hub, Datasets & Inference',
+    iconUrl: 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg',
     level: 'Core',
   },
   {
     name: 'LangChain',
     category: 'AI & LLMs',
     role: 'LLM Orchestration, RAG & Agentic Workflows',
+    iconUrl: 'https://cdn.simpleicons.org/langchain/10B981',
     level: 'Core',
   },
   {
     name: 'PEFT · LoRA · GGUF',
     category: 'AI & LLMs',
     role: 'Parameter-Efficient Fine-Tuning & Quantization',
+    iconUrl: 'https://cdn.simpleicons.org/weightsandbiases/FFBE00',
     level: 'Core',
   },
   {
     name: 'NumPy',
     category: 'Data & DevOps',
     role: 'High-Performance Numerical & Tensor Computing',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/numpy/numpy-original.svg',
     level: 'Core',
   },
   {
     name: 'Pandas',
     category: 'Data & DevOps',
     role: 'Data Wrangling, Cleaning & Feature Engineering',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pandas/pandas-original.svg',
     level: 'Core',
   },
   {
     name: 'Scikit-learn',
     category: 'AI & LLMs',
     role: 'Classical Machine Learning & Model Evaluation',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/scikitlearn/scikitlearn-original.svg',
     level: 'Core',
   },
   {
     name: 'Matplotlib',
     category: 'Data & DevOps',
     role: 'Scientific Data Visualization & Analytics Plots',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/matplotlib/matplotlib-original.svg',
     level: 'Core',
   },
   {
     name: 'Jupyter',
     category: 'Data & DevOps',
     role: 'Interactive ML Experimentation & Research Notebooks',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jupyter/jupyter-original.svg',
     level: 'Core',
   },
   {
     name: 'Streamlit',
     category: 'Frontend & Mobile',
     role: 'Interactive AI & Data Science Web Applications',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/streamlit/streamlit-original.svg',
     level: 'Core',
   },
   {
@@ -396,6 +409,7 @@ export const TECH_STACK: TechSkill[] = [
     category: 'Backend & APIs',
     role: 'High-Performance Async Python AI & REST APIs',
     iconSlug: 'fastapi',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg',
     level: 'Core',
   },
   {
@@ -403,6 +417,7 @@ export const TECH_STACK: TechSkill[] = [
     category: 'Backend & APIs',
     role: 'ML Model Serving & Lightweight Web Backends',
     iconSlug: 'flask',
+    iconUrl: 'https://cdn.simpleicons.org/flask/38BDF8',
     level: 'Production',
   },
   {
@@ -410,6 +425,7 @@ export const TECH_STACK: TechSkill[] = [
     category: 'Frontend & Mobile',
     role: 'Type-Safe Full-Stack Web Applications',
     iconSlug: 'ts',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
     level: 'Core',
   },
   {
@@ -417,6 +433,7 @@ export const TECH_STACK: TechSkill[] = [
     category: 'Frontend & Mobile',
     role: 'Modern Frontend Interfaces & AI Dashboards',
     iconSlug: 'react',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
     level: 'Core',
   },
   {
@@ -424,6 +441,7 @@ export const TECH_STACK: TechSkill[] = [
     category: 'Data & DevOps',
     role: 'Relational Databases & PL/pgSQL',
     iconSlug: 'postgres',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg',
     level: 'Core',
   },
   {
@@ -431,6 +449,7 @@ export const TECH_STACK: TechSkill[] = [
     category: 'Data & DevOps',
     role: 'Containerized AI & Backend Deployments',
     iconSlug: 'docker',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg',
     level: 'Production',
   },
   {
@@ -438,6 +457,7 @@ export const TECH_STACK: TechSkill[] = [
     category: 'Data & DevOps',
     role: 'Version Control & CI/CD Workflows',
     iconSlug: 'git',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg',
     level: 'Core',
   },
 ];

@@ -693,14 +693,19 @@ export function App() {
                     className="surface-subcard rounded-xl p-3.5 flex items-center justify-between gap-3"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      {skill.iconSlug ? (
-                        <img
-                          src={`https://skillicons.dev/icons?i=${skill.iconSlug}&theme=dark`}
-                          alt={skill.name}
-                          className="w-8 h-8 rounded-lg shrink-0"
-                        />
+                      {skill.iconUrl || skill.iconSlug ? (
+                        <div className="w-9 h-9 rounded-lg bg-zinc-900/90 border border-zinc-800/90 p-1.5 flex items-center justify-center shrink-0">
+                          <img
+                            src={
+                              skill.iconUrl ||
+                              `https://skillicons.dev/icons?i=${skill.iconSlug}&theme=dark`
+                            }
+                            alt={skill.name}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
                       ) : (
-                        <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 font-semibold text-xs shrink-0">
+                        <div className="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 font-semibold text-xs shrink-0">
                           AI
                         </div>
                       )}

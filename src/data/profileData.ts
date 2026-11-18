@@ -319,95 +319,104 @@ export const TECH_STACK: TechSkill[] = [
   {
     name: 'Python',
     category: 'Backend & APIs',
-    role: 'Primary AI & Backend Language',
+    role: 'Primary AI, Data Science & Backend Language',
     iconSlug: 'python',
     level: 'Core',
   },
   {
     name: 'PyTorch',
     category: 'AI & LLMs',
-    role: 'Deep Learning & Model Training',
+    role: 'Deep Learning & Neural Network Training',
     iconSlug: 'pytorch',
     level: 'Core',
   },
   {
-    name: 'Hugging Face & Transformers',
+    name: 'TensorFlow',
     category: 'AI & LLMs',
-    role: 'Model Hub, Datasets & Inference',
+    role: 'Deep Learning Models & Production ML Pipelines',
+    iconSlug: 'tensorflow',
     level: 'Core',
   },
   {
-    name: 'PEFT · LoRA · TRL',
+    name: 'Hugging Face',
     category: 'AI & LLMs',
-    role: 'Supervised & Parameter-Efficient Fine-Tuning',
+    role: 'Transformers, Model Hub, Datasets & Inference',
     level: 'Core',
   },
   {
-    name: 'Qwen2.5 & Open LLMs',
+    name: 'LangChain',
     category: 'AI & LLMs',
-    role: 'Domain Adaptation & GGUF Quantization',
-    level: 'Research',
+    role: 'LLM Orchestration, RAG & Agentic Workflows',
+    level: 'Core',
   },
   {
-    name: 'Google Gemini API',
+    name: 'PEFT · LoRA · GGUF',
     category: 'AI & LLMs',
-    role: 'Agentic & Multimodal Integrations',
-    level: 'Production',
+    role: 'Parameter-Efficient Fine-Tuning & Quantization',
+    level: 'Core',
+  },
+  {
+    name: 'NumPy',
+    category: 'Data & DevOps',
+    role: 'High-Performance Numerical & Tensor Computing',
+    level: 'Core',
+  },
+  {
+    name: 'Pandas',
+    category: 'Data & DevOps',
+    role: 'Data Wrangling, Cleaning & Feature Engineering',
+    level: 'Core',
+  },
+  {
+    name: 'Scikit-learn',
+    category: 'AI & LLMs',
+    role: 'Classical Machine Learning & Model Evaluation',
+    level: 'Core',
+  },
+  {
+    name: 'Matplotlib',
+    category: 'Data & DevOps',
+    role: 'Scientific Data Visualization & Analytics Plots',
+    level: 'Core',
+  },
+  {
+    name: 'Jupyter',
+    category: 'Data & DevOps',
+    role: 'Interactive ML Experimentation & Research Notebooks',
+    level: 'Core',
+  },
+  {
+    name: 'Streamlit',
+    category: 'Frontend & Mobile',
+    role: 'Interactive AI & Data Science Web Applications',
+    level: 'Core',
   },
   {
     name: 'FastAPI',
     category: 'Backend & APIs',
-    role: 'Async Python APIs & Microservices',
+    role: 'High-Performance Async Python AI & REST APIs',
     iconSlug: 'fastapi',
     level: 'Core',
   },
   {
     name: 'Flask',
     category: 'Backend & APIs',
-    role: 'ML Model Serving & Web Backends',
+    role: 'ML Model Serving & Lightweight Web Backends',
     iconSlug: 'flask',
     level: 'Production',
   },
   {
     name: 'TypeScript',
     category: 'Frontend & Mobile',
-    role: 'Type-Safe Web Applications',
+    role: 'Type-Safe Full-Stack Web Applications',
     iconSlug: 'ts',
     level: 'Core',
   },
   {
-    name: 'React & Next.js',
+    name: 'React',
     category: 'Frontend & Mobile',
-    role: 'Web Interfaces & Dashboards',
+    role: 'Modern Frontend Interfaces & AI Dashboards',
     iconSlug: 'react',
-    level: 'Core',
-  },
-  {
-    name: 'Node.js',
-    category: 'Backend & APIs',
-    role: 'Real-Time Services & Bots',
-    iconSlug: 'nodejs',
-    level: 'Production',
-  },
-  {
-    name: 'Flutter & Dart',
-    category: 'Frontend & Mobile',
-    role: 'Cross-Platform Mobile Apps',
-    iconSlug: 'flutter',
-    level: 'Production',
-  },
-  {
-    name: 'Laravel & PHP',
-    category: 'Backend & APIs',
-    role: 'Full-Stack Web Platforms',
-    iconSlug: 'laravel',
-    level: 'Production',
-  },
-  {
-    name: 'Tailwind CSS',
-    category: 'Frontend & Mobile',
-    role: 'UI Styling & Design Systems',
-    iconSlug: 'tailwind',
     level: 'Core',
   },
   {
@@ -420,7 +429,7 @@ export const TECH_STACK: TechSkill[] = [
   {
     name: 'Docker',
     category: 'Data & DevOps',
-    role: 'Containerized Deployments',
+    role: 'Containerized AI & Backend Deployments',
     iconSlug: 'docker',
     level: 'Production',
   },
@@ -689,10 +698,10 @@ I am an AI Engineer and Software Developer specializing in **open-source LLM fin
 
 ### Technical Stack
 
-- **AI & Machine Learning:** PyTorch, Hugging Face Transformers, PEFT / LoRA, TRL (SFT), GGUF / llama.cpp, Google Gemini API
-- **Backend & Data:** Python, FastAPI, Flask, Node.js, Laravel (PHP), PostgreSQL, MySQL, REST APIs
-- **Frontend & Mobile:** TypeScript, JavaScript, React, Next.js, Flutter (Dart), Tailwind CSS
-- **Infrastructure & Tooling:** Docker, Git, GitHub Actions, Linux
+- **Deep Learning & LLMs:** PyTorch, TensorFlow, Hugging Face, LangChain, PEFT / LoRA, GGUF / llama.cpp
+- **Data Science & ML Analytics:** NumPy, Pandas, Scikit-learn, Matplotlib, Jupyter, Streamlit
+- **Backend & Web Interfaces:** Python, FastAPI, Flask, TypeScript, React, REST APIs
+- **Databases & MLOps:** PostgreSQL, SQL / MySQL, Docker, Git, GitHub Actions, Linux
 
 ---
 

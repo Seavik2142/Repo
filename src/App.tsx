@@ -324,22 +324,23 @@ export function App() {
                 <div>
                   <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-medium mb-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                    <span>Available for AI & Backend Engineering Roles</span>
+                    <span>Available for AI Engineer & Machine Learning Roles</span>
                   </div>
 
                   <h1 className="text-3xl sm:text-4xl font-bold text-zinc-50 tracking-tight">
                     {user.name}
                   </h1>
                   <p className="text-base sm:text-lg text-zinc-300 font-medium mt-1">
-                    AI Engineer & Backend Software Developer
+                    AI Engineer & Machine Learning Developer
                   </p>
                 </div>
               </div>
 
               <p className="mt-6 text-[15px] sm:text-base text-zinc-400 leading-[1.75] max-w-2xl">
-                Software developer based in Cambodia focused on fine-tuning open-source language models
-                (Qwen2.5, PEFT/LoRA, GGUF), building conversational AI systems with Google Gemini, and
-                architecting reliable backend services in Python and TypeScript.
+                AI Engineer based in Cambodia specializing in deep learning and open-source LLM
+                fine-tuning (PyTorch, TensorFlow, Hugging Face, LangChain, PEFT/LoRA), end-to-end
+                data science pipelines (NumPy, Pandas, Scikit-learn), and production AI services
+                built with Python, FastAPI, and Streamlit.
               </p>
 
               <div className="mt-5 flex flex-wrap items-center gap-y-2 gap-x-5 text-sm text-zinc-400">
@@ -452,19 +453,19 @@ export function App() {
                   <li className="flex items-start gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 mt-2 shrink-0" />
                     <span>
-                      <strong className="text-zinc-100 font-medium">LLM Fine-Tuning:</strong> SFT, PEFT/LoRA adapters, and GGUF quantization on Qwen2.5 models.
+                      <strong className="text-zinc-100 font-medium">Deep Learning & LLMs:</strong> Model training, PEFT/LoRA fine-tuning, and RAG workflows with PyTorch, TensorFlow, Hugging Face, and LangChain.
                     </span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 mt-2 shrink-0" />
                     <span>
-                      <strong className="text-zinc-100 font-medium">Backend Architecture:</strong> Async REST APIs in Python (FastAPI, Flask) and PostgreSQL.
+                      <strong className="text-zinc-100 font-medium">Data Science & ML:</strong> Feature engineering, classical ML, and scientific analytics using NumPy, Pandas, Scikit-learn, Matplotlib, and Jupyter.
                     </span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 mt-2 shrink-0" />
                     <span>
-                      <strong className="text-zinc-100 font-medium">Product Engineering:</strong> Full-stack web applications and Telegram Mini Apps.
+                      <strong className="text-zinc-100 font-medium">AI Services & Deployment:</strong> High-performance inference APIs and interactive ML web apps in Python, FastAPI, Streamlit, and Docker.
                     </span>
                   </li>
                 </ul>

@@ -82,7 +82,7 @@ export const INITIAL_USER: GitHubUser = {
   name: 'Mao Seavik',
   avatar_url: '/profile.jpg',
   html_url: 'https://github.com/Seavik2142',
-  bio: 'Software developer based in Cambodia focused on fine-tuning open-source language models (Qwen2.5, PEFT/LoRA, GGUF), building conversational AI systems with Google Gemini, and architecting reliable backend services in Python and TypeScript.',
+  bio: 'AI Engineer based in Cambodia specializing in deep learning and open-source LLM fine-tuning (PyTorch, TensorFlow, Hugging Face, LangChain, PEFT/LoRA), end-to-end data science pipelines (NumPy, Pandas, Scikit-learn), and production AI services built with Python, FastAPI, and Streamlit.',
   location: 'Phnom Penh, Cambodia',
   blog: 'https://seavik-gamma.vercel.app/',
   public_repos: 23,

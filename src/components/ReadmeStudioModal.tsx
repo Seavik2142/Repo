@@ -110,7 +110,7 @@ export const ReadmeStudioModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   Mao Seavik
                 </h1>
                 <p className="text-sm text-zinc-300 font-medium mt-1.5">
-                  AI Engineer & Backend Software Developer
+                  Machine Learning Engineer & Backend Software Developer
                 </p>
                 <p className="text-xs text-zinc-400 mt-1">
                   Phnom Penh, Cambodia · B.Sc. Computer Studies at Norton University
@@ -122,7 +122,7 @@ export const ReadmeStudioModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   About
                 </h4>
                 <p className="text-sm text-zinc-300 leading-relaxed">
-                  I am an AI Engineer and Software Developer specializing in{' '}
+                  I am a Machine Learning Engineer and Software Developer specializing in{' '}
                   <strong className="text-white font-medium">open-source LLM fine-tuning</strong> (Qwen2.5, SFT, PEFT/LoRA, GGUF),{' '}
                   <strong className="text-white font-medium">Python backend services</strong> (FastAPI, Flask, PostgreSQL), and{' '}
                   <strong className="text-white font-medium">full-stack applications</strong> (TypeScript, React, Next.js, Flutter).

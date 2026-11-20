@@ -82,7 +82,7 @@ export const INITIAL_USER: GitHubUser = {
   name: 'Mao Seavik',
   avatar_url: '/profile.jpg',
   html_url: 'https://github.com/Seavik2142',
-  bio: 'AI Engineer based in Cambodia specializing in deep learning and open-source LLM fine-tuning (PyTorch, TensorFlow, Hugging Face, LangChain, PEFT/LoRA), end-to-end data science pipelines (NumPy, Pandas, Scikit-learn), and production AI services built with Python, FastAPI, and Streamlit.',
+  bio: 'Machine Learning Engineer based in Cambodia specializing in deep learning and open-source LLM fine-tuning (PyTorch, TensorFlow, Hugging Face, LangChain, PEFT/LoRA), end-to-end data science pipelines (NumPy, Pandas, Scikit-learn), and production ML services built with Python, FastAPI, and Streamlit.',
   location: 'Phnom Penh, Cambodia',
   blog: 'https://seavik-gamma.vercel.app/',
   public_repos: 23,
@@ -671,7 +671,7 @@ export const CLEAN_GITHUB_README_MARKDOWN = `<div align="center">
 
 # Mao Seavik
 
-**AI Engineer & Backend Software Developer**  
+**Machine Learning Engineer & Backend Software Developer**  
 Phnom Penh, Cambodia · B.Sc. Computer Studies at Norton University
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-seavik--gamma.vercel.app-18181B?style=flat-square&logo=vercel&logoColor=white)](https://seavik-gamma.vercel.app/)
@@ -685,11 +685,11 @@ Phnom Penh, Cambodia · B.Sc. Computer Studies at Norton University
 
 ### About
 
-I am an AI Engineer and Software Developer specializing in **open-source LLM fine-tuning** (\`Qwen2.5\`, \`SFT\`, \`PEFT/LoRA\`, \`GGUF\`), **Python backend services** (\`FastAPI\`, \`Flask\`, \`PostgreSQL\`), and **full-stack applications** (\`TypeScript\`, \`React\`, \`Next.js\`, \`Flutter\`).
+I am a Machine Learning Engineer and Software Developer specializing in **open-source LLM fine-tuning** (\`PyTorch\`, \`TensorFlow\`, \`Hugging Face\`, \`LangChain\`, \`PEFT/LoRA\`), **data science pipelines** (\`NumPy\`, \`Pandas\`, \`Scikit-learn\`), and **production ML services** (\`Python\`, \`FastAPI\`, \`Streamlit\`, \`PostgreSQL\`).
 
 - **Research & Models:** Published 4 domain-adapted agricultural language models on [Hugging Face (@Maoseavik)](https://huggingface.co/Maoseavik).
-- **Engineering Focus:** Conversational AI agents, API design, and production web/mobile systems.
-- **Opportunities:** Open to AI Engineering internships, backend roles, and international research collaboration.
+- **Engineering Focus:** Deep learning, data science pipelines, and production ML APIs.
+- **Opportunities:** Open to Machine Learning Engineer internships, backend roles, and international research collaboration.
 
 ---
 

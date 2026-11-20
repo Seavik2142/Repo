@@ -324,22 +324,22 @@ export function App() {
                 <div>
                   <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-medium mb-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                    <span>Available for AI Engineer & Machine Learning Roles</span>
+                    <span>Available for Machine Learning Engineer & Data Science Roles</span>
                   </div>
 
                   <h1 className="text-3xl sm:text-4xl font-bold text-zinc-50 tracking-tight">
                     {user.name}
                   </h1>
                   <p className="text-base sm:text-lg text-zinc-300 font-medium mt-1">
-                    AI Engineer & Machine Learning Developer
+                    Machine Learning Engineer & Data Science Developer
                   </p>
                 </div>
               </div>
 
               <p className="mt-6 text-[15px] sm:text-base text-zinc-400 leading-[1.75] max-w-2xl">
-                AI Engineer based in Cambodia specializing in deep learning and open-source LLM
+                Machine Learning Engineer based in Cambodia specializing in deep learning and open-source LLM
                 fine-tuning (PyTorch, TensorFlow, Hugging Face, LangChain, PEFT/LoRA), end-to-end
-                data science pipelines (NumPy, Pandas, Scikit-learn), and production AI services
+                data science pipelines (NumPy, Pandas, Scikit-learn), and production ML services
                 built with Python, FastAPI, and Streamlit.
               </p>
 
@@ -872,7 +872,7 @@ export function App() {
       <footer className="relative z-10 border-t border-zinc-800/80 py-8 mt-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-400">
           <div>
-            <span className="font-medium text-zinc-200">Mao Seavik</span> · AI Engineer & Software Developer
+            <span className="font-medium text-zinc-200">Mao Seavik</span> · Machine Learning Engineer & Software Developer
           </div>
 
           <div className="flex flex-wrap items-center gap-5 text-xs">

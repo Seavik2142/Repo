@@ -18,7 +18,7 @@ query GetSeavikProfile($login: String!) {
     following {
       totalCount
     }
-    repositories(first: 100, privacy: PUBLIC, orderBy: { field: PUSHED_AT, direction: DESC }) {
+    repositories(first: 100, privacy: PUBLIC, ownerAffiliations: [OWNER], orderBy: { field: PUSHED_AT, direction: DESC }) {
       totalCount
       nodes {
         databaseId

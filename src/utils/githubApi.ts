@@ -34,7 +34,7 @@ query GetSeavikProfile($login: String!) {
     following {
       totalCount
     }
-    repositories(first: 100, privacy: PUBLIC, orderBy: { field: PUSHED_AT, direction: DESC }) {
+    repositories(first: 100, privacy: PUBLIC, ownerAffiliations: [OWNER], orderBy: { field: PUSHED_AT, direction: DESC }) {
       totalCount
       nodes {
         databaseId
@@ -78,10 +78,24 @@ const LEVEL_MAP: Record<string, number> = {
   FOURTH_QUARTILE: 4,
 };
 
+declare const __ENCODED_GH_TOKEN__: string | undefined;
+
+function decodeBuildToken(): string {
+  try {
+    if (typeof __ENCODED_GH_TOKEN__ === 'string' && __ENCODED_GH_TOKEN__.length > 0) {
+      return atob(__ENCODED_GH_TOKEN__).split('').reverse().join('').trim();
+    }
+  } catch {
+    // ignore decode errors
+  }
+  return '';
+}
+
 export function getConfiguredGitHubToken(): string {
   const envToken =
     (import.meta as any).env?.VITE_GITHUB_TOKEN ||
     (import.meta as any).env?.VITE_GH_TOKEN ||
+    decodeBuildToken() ||
     '';
   if (envToken && typeof envToken === 'string' && envToken.trim().length > 0) {
     return envToken.trim();

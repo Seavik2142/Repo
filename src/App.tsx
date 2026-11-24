@@ -10,6 +10,7 @@ import {
   Github,
   Globe,
   GraduationCap,
+  KeyRound,
   Linkedin,
   MapPin,
   Moon,
@@ -17,6 +18,7 @@ import {
   Search,
   Star,
   Sun,
+  X,
 } from 'lucide-react';
 import {
   CLEAN_GITHUB_README_MARKDOWN,
@@ -32,6 +34,12 @@ import {
 import { InteractiveSnakeCard } from './components/InteractiveSnakeCard';
 import { HuggingFaceModelsSection } from './components/HuggingFaceModelsSection';
 import { ReadmeStudioModal } from './components/ReadmeStudioModal';
+import {
+  fetchGitHubWithGraphQL,
+  fetchServerlessGitHub,
+  getConfiguredGitHubToken,
+  setConfiguredGitHubToken,
+} from './utils/githubApi';
 
 const LANGUAGE_COLORS: Record<string, string> = {
   Python: '#3572A5',
@@ -59,60 +67,103 @@ export function App() {
 
   // Modals & Theme
   const [isReadmeModalOpen, setIsReadmeModalOpen] = useState(false);
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
+  const [tokenInput, setTokenInput] = useState<string>(() => getConfiguredGitHubToken());
+  const [apiAuthSource, setApiAuthSource] = useState<'graphql' | 'serverless' | 'rest'>('rest');
   const [copiedQuickReadme, setCopiedQuickReadme] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   const activeAvatar = isDarkMode ? '/profile-dark.jpg' : '/profile-light.jpg';
 
+  const applyMergedRepos = (reposData: GitHubRepo[]) => {
+    const fallbackMap = new Map(FALLBACK_REPOS.map((r) => [r.name.toLowerCase(), r]));
+    const merged = reposData
+      .map((r) => {
+        const fb = fallbackMap.get(r.name.toLowerCase());
+        return {
+          ...r,
+          description:
+            r.description ||
+            fb?.description ||
+            `Public repository maintained by @Seavik2142.`,
+          language: r.language || fb?.language || 'Python',
+        };
+      })
+      .sort(
+        (a, b) =>
+          new Date(b.pushed_at || 0).getTime() - new Date(a.pushed_at || 0).getTime()
+      );
+    setRepos(merged);
+  };
+
   const syncLiveProfile = async () => {
     setIsSyncing(true);
     setRefreshTrigger((t) => t + 1);
     try {
-      const [userRes, reposRes, hfRes] = await Promise.allSettled([
-        fetch('https://api.github.com/users/Seavik2142', { cache: 'no-store' }),
-        fetch('https://api.github.com/users/Seavik2142/repos?per_page=100&sort=pushed&direction=desc', {
-          cache: 'no-store',
-        }),
-        fetch('https://huggingface.co/api/models?author=Maoseavik', { cache: 'no-store' }),
-      ]);
+      const configuredToken = getConfiguredGitHubToken();
 
-      if (userRes.status === 'fulfilled' && userRes.value.ok) {
-        const userData = await userRes.value.json();
+      // 1. Try Authenticated GitHub GraphQL (via local token or Vercel /api/github)
+      const gqlPayload = configuredToken
+        ? await fetchGitHubWithGraphQL(configuredToken, 'Seavik2142')
+        : await fetchServerlessGitHub();
+
+      if (gqlPayload && gqlPayload.authenticated && gqlPayload.user) {
+        setApiAuthSource(gqlPayload.source);
         setUser((prev) => ({
           ...prev,
-          ...userData,
+          ...gqlPayload.user,
           avatar_url: '/profile.jpg',
-          name: userData.name || prev.name,
+          name: gqlPayload.user?.name || prev.name,
           bio: prev.bio,
         }));
-      }
+        if (Array.isArray(gqlPayload.repos) && gqlPayload.repos.length > 0) {
+          applyMergedRepos(gqlPayload.repos);
+        }
+      } else {
+        setApiAuthSource('rest');
+        const authHeaders: Record<string, string> = configuredToken
+          ? { Authorization: `Bearer ${configuredToken}` }
+          : {};
 
-      if (reposRes.status === 'fulfilled' && reposRes.value.ok) {
-        const reposData: GitHubRepo[] = await reposRes.value.json();
-        if (Array.isArray(reposData) && reposData.length > 0) {
-          const fallbackMap = new Map(FALLBACK_REPOS.map((r) => [r.name.toLowerCase(), r]));
-          const merged = reposData
-            .map((r) => {
-              const fb = fallbackMap.get(r.name.toLowerCase());
-              return {
-                ...r,
-                description:
-                  r.description ||
-                  fb?.description ||
-                  `Public repository maintained by @Seavik2142.`,
-                language: r.language || fb?.language || 'Python',
-              };
-            })
-            .sort(
-              (a, b) =>
-                new Date(b.pushed_at || 0).getTime() - new Date(a.pushed_at || 0).getTime()
-            );
-          setRepos(merged);
+        const [userRes, reposRes] = await Promise.allSettled([
+          fetch('https://api.github.com/users/Seavik2142', {
+            headers: authHeaders,
+            cache: 'no-store',
+          }),
+          fetch(
+            'https://api.github.com/users/Seavik2142/repos?per_page=100&sort=pushed&direction=desc',
+            {
+              headers: authHeaders,
+              cache: 'no-store',
+            }
+          ),
+        ]);
+
+        if (userRes.status === 'fulfilled' && userRes.value.ok) {
+          const userData = await userRes.value.json();
+          setUser((prev) => ({
+            ...prev,
+            ...userData,
+            avatar_url: '/profile.jpg',
+            name: userData.name || prev.name,
+            bio: prev.bio,
+          }));
+        }
+
+        if (reposRes.status === 'fulfilled' && reposRes.value.ok) {
+          const reposData: GitHubRepo[] = await reposRes.value.json();
+          if (Array.isArray(reposData) && reposData.length > 0) {
+            applyMergedRepos(reposData);
+          }
         }
       }
 
-      if (hfRes.status === 'fulfilled' && hfRes.value.ok) {
-        const hfData = await hfRes.value.json();
+      // Sync Hugging Face downloads in parallel
+      const hfRes = await fetch('https://huggingface.co/api/models?author=Maoseavik', {
+        cache: 'no-store',
+      });
+      if (hfRes.ok) {
+        const hfData = await hfRes.json();
         if (Array.isArray(hfData)) {
           const dlMap: Record<string, number> = {};
           for (const item of hfData) {
@@ -268,6 +319,23 @@ export function App() {
                   <span className="hidden sm:inline">Light</span>
                 </>
               )}
+            </button>
+
+            <button
+              onClick={() => setIsApiKeyModalOpen(true)}
+              title="Configure GitHub API Key for real-time GraphQL sync"
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
+                apiAuthSource === 'graphql' || apiAuthSource === 'serverless'
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20'
+                  : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800'
+              }`}
+            >
+              <KeyRound className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">
+                {apiAuthSource === 'graphql' || apiAuthSource === 'serverless'
+                  ? 'API Key Active'
+                  : 'API Key'}
+              </span>
             </button>
 
             <button
@@ -935,6 +1003,74 @@ export function App() {
         isOpen={isReadmeModalOpen}
         onClose={() => setIsReadmeModalOpen(false)}
       />
+
+      {isApiKeyModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="surface-card rounded-2xl max-w-lg w-full p-6 space-y-5 border border-zinc-800">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-lg font-semibold text-zinc-50">
+                  GitHub API Token Configuration
+                </h3>
+                <p className="text-xs text-zinc-400 mt-1">
+                  Connect a GitHub Personal Access Token (<code>ghp_...</code> or <code>github_pat_...</code>) to enable real-time GraphQL contribution calendar sync and 5,000 requests/hr rate limits.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsApiKeyModalOpen(false)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-xs font-medium text-zinc-300">
+                GitHub Personal Access Token (stored locally in your browser or <code>.env.local</code>)
+              </label>
+              <input
+                type="password"
+                value={tokenInput}
+                onChange={(e) => setTokenInput(e.target.value)}
+                placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-sky-500 focus:outline-none text-sm font-mono text-zinc-100 placeholder:text-zinc-600"
+              />
+              <div className="rounded-xl bg-zinc-900/80 border border-zinc-800/80 p-3.5 text-xs text-zinc-400 space-y-1.5">
+                <p className="font-medium text-zinc-200">3 Ways to Configure Automatic Real-Time Sync:</p>
+                <p>1. <strong>Browser Instant Sync:</strong> Paste your token above and click <strong>Save &amp; Sync Now</strong>.</p>
+                <p>2. <strong>Local Project (<code>.env.local</code>):</strong> Set <code>VITE_GITHUB_TOKEN=your_token</code> in <code>.env.local</code>.</p>
+                <p>3. <strong>Vercel Production:</strong> Add <code>GITHUB_TOKEN=your_token</code> in Vercel Project Settings → Environment Variables (powers <code>/api/github</code> securely on the server).</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              {tokenInput && (
+                <button
+                  onClick={() => {
+                    setTokenInput('');
+                    setConfiguredGitHubToken('');
+                    setIsApiKeyModalOpen(false);
+                    syncLiveProfile();
+                  }}
+                  className="px-3.5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 text-xs font-medium border border-zinc-800"
+                >
+                  Clear Token
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  setConfiguredGitHubToken(tokenInput);
+                  setIsApiKeyModalOpen(false);
+                  syncLiveProfile();
+                }}
+                className="px-4 py-2 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 text-xs font-semibold transition-colors"
+              >
+                Save &amp; Sync Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

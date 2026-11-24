@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowUpRight, GitCommit, Pause, Play, RefreshCw } from 'lucide-react';
 import { GitHubRepo, GitHubUser } from '../data/profileData';
+import {
+  fetchGitHubWithGraphQL,
+  fetchServerlessGitHub,
+  getConfiguredGitHubToken,
+} from '../utils/githubApi';
 
 const WEEKS = 52;
 const DAYS = 7;
@@ -70,51 +75,91 @@ export const InteractiveSnakeCard: React.FC<Props> = ({
   const fetchLiveContributions = useCallback(async () => {
     setIsLoadingContrib(true);
     try {
+      const configuredToken = getConfiguredGitHubToken();
+      const gqlPayload = configuredToken
+        ? await fetchGitHubWithGraphQL(configuredToken, 'Seavik2142')
+        : await fetchServerlessGitHub();
+
+      const authHeaders: Record<string, string> = configuredToken
+        ? { Authorization: `Bearer ${configuredToken}` }
+        : {};
+
       const [contribRes, eventsRes] = await Promise.allSettled([
-        fetch('https://github-contributions-api.jogruber.de/v4/Seavik2142?y=last', {
-          cache: 'no-store',
-        }),
-        fetch('https://api.github.com/users/Seavik2142/events/public?per_page=30', {
-          cache: 'no-store',
-        }),
+        gqlPayload?.contributions
+          ? Promise.resolve(null)
+          : fetch('https://github-contributions-api.jogruber.de/v4/Seavik2142?y=last', {
+              cache: 'no-store',
+            }),
+        gqlPayload?.events
+          ? Promise.resolve(null)
+          : fetch('https://api.github.com/users/Seavik2142/events/public?per_page=30', {
+              headers: authHeaders,
+              cache: 'no-store',
+            }),
       ]);
 
       // Parse recent public events first so we can overlay same-day commits onto the heatmap
       const todayCountsByDate: Record<string, number> = {};
       const parsedEvents: RecentPushEvent[] = [];
 
-      if (eventsRes.status === 'fulfilled' && eventsRes.value.ok) {
-        const rawEvents = await eventsRes.value.json();
-        if (Array.isArray(rawEvents)) {
-          for (const ev of rawEvents) {
-            const dateStr = typeof ev.created_at === 'string' ? ev.created_at.slice(0, 10) : '';
-            if (dateStr) {
-              const commitLen = ev.payload?.commits?.length || 1;
-              todayCountsByDate[dateStr] = (todayCountsByDate[dateStr] || 0) + commitLen;
-            }
-            if (parsedEvents.length < 8 && ev.repo?.name) {
-              const commitMsg =
-                ev.payload?.commits?.[ev.payload.commits.length - 1]?.message ||
-                (ev.type === 'CreateEvent'
-                  ? `Created ${ev.payload?.ref_type || 'repository'} ${ev.payload?.ref || ''}`
-                  : ev.type === 'WatchEvent'
-                  ? 'Starred repository'
-                  : `Updated ${ev.repo.name}`);
-              parsedEvents.push({
-                id: String(ev.id),
-                repoName: ev.repo.name,
-                repoUrl: `https://github.com/${ev.repo.name}`,
-                message: String(commitMsg).split('\n')[0],
-                createdAt: ev.created_at || '',
-                type: ev.type || 'PushEvent',
-              });
-            }
+      const rawEvents =
+        gqlPayload?.events ||
+        (eventsRes.status === 'fulfilled' && eventsRes.value && eventsRes.value.ok
+          ? await eventsRes.value.json()
+          : []);
+
+      if (Array.isArray(rawEvents)) {
+        for (const ev of rawEvents) {
+          const dateStr = typeof ev.created_at === 'string' ? ev.created_at.slice(0, 10) : '';
+          if (dateStr) {
+            const commitLen = ev.payload?.commits?.length || 1;
+            todayCountsByDate[dateStr] = (todayCountsByDate[dateStr] || 0) + commitLen;
           }
-          setRecentEvents(parsedEvents);
+          if (parsedEvents.length < 8 && ev.repo?.name) {
+            const commitMsg =
+              ev.payload?.commits?.[ev.payload.commits.length - 1]?.message ||
+              (ev.type === 'CreateEvent'
+                ? `Created ${ev.payload?.ref_type || 'repository'} ${ev.payload?.ref || ''}`
+                : ev.type === 'WatchEvent'
+                ? 'Starred repository'
+                : `Updated ${ev.repo.name}`);
+            parsedEvents.push({
+              id: String(ev.id),
+              repoName: ev.repo.name,
+              repoUrl: `https://github.com/${ev.repo.name}`,
+              message: String(commitMsg).split('\n')[0],
+              createdAt: ev.created_at || '',
+              type: ev.type || 'PushEvent',
+            });
+          }
         }
+        setRecentEvents(parsedEvents);
       }
 
-      if (contribRes.status === 'fulfilled' && contribRes.value.ok) {
+      if (gqlPayload?.contributions && gqlPayload.contributions.days.length > 0) {
+        const rawDays: ContributionDay[] = gqlPayload.contributions.days.map((item) => {
+          const liveCount = Math.max(item.count || 0, todayCountsByDate[item.date] || 0);
+          let liveLevel = item.level || 0;
+          if (liveCount > item.count) {
+            if (liveCount >= 12) liveLevel = 4;
+            else if (liveCount >= 6) liveLevel = 3;
+            else if (liveCount >= 3) liveLevel = 2;
+            else if (liveCount >= 1) liveLevel = 1;
+          }
+          return {
+            date: item.date,
+            count: liveCount,
+            level: liveLevel,
+          };
+        });
+        setContribDays(rawDays);
+        const computedTotal = rawDays.reduce((acc, d) => acc + (d.count || 0), 0);
+        setTotalContributions(Math.max(gqlPayload.contributions.total || 0, computedTotal));
+      } else if (
+        contribRes.status === 'fulfilled' &&
+        contribRes.value &&
+        contribRes.value.ok
+      ) {
         const data = await contribRes.value.json();
         if (Array.isArray(data?.contributions) && data.contributions.length > 0) {
           const rawDays: ContributionDay[] = data.contributions.map((item: ContributionDay) => {

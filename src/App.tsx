@@ -37,6 +37,7 @@ const LANGUAGE_COLORS: Record<string, string> = {
   Python: '#3572A5',
   TypeScript: '#3178C6',
   JavaScript: '#F7DF1E',
+  'Jupyter Notebook': '#DA5B0B',
   Dart: '#00B4AB',
   PHP: '#4F5D95',
   HTML: '#E34C26',
@@ -48,6 +49,7 @@ export function App() {
   const [repos, setRepos] = useState<GitHubRepo[]>(FALLBACK_REPOS);
   const [hfDownloads, setHfDownloads] = useState<Record<string, number>>({});
   const [isSyncing, setIsSyncing] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Filters
   const [projectCategory, setProjectCategory] = useState<string>('All');
@@ -64,11 +66,14 @@ export function App() {
 
   const syncLiveProfile = async () => {
     setIsSyncing(true);
+    setRefreshTrigger((t) => t + 1);
     try {
       const [userRes, reposRes, hfRes] = await Promise.allSettled([
-        fetch('https://api.github.com/users/Seavik2142'),
-        fetch('https://api.github.com/users/Seavik2142/repos?per_page=100&sort=updated'),
-        fetch('https://huggingface.co/api/models?author=Maoseavik'),
+        fetch('https://api.github.com/users/Seavik2142', { cache: 'no-store' }),
+        fetch('https://api.github.com/users/Seavik2142/repos?per_page=100&sort=pushed&direction=desc', {
+          cache: 'no-store',
+        }),
+        fetch('https://huggingface.co/api/models?author=Maoseavik', { cache: 'no-store' }),
       ]);
 
       if (userRes.status === 'fulfilled' && userRes.value.ok) {
@@ -87,7 +92,6 @@ export function App() {
         if (Array.isArray(reposData) && reposData.length > 0) {
           const fallbackMap = new Map(FALLBACK_REPOS.map((r) => [r.name.toLowerCase(), r]));
           const merged = reposData
-            .filter((r) => r.name !== 'Seavik2142')
             .map((r) => {
               const fb = fallbackMap.get(r.name.toLowerCase());
               return {
@@ -95,10 +99,14 @@ export function App() {
                 description:
                   r.description ||
                   fb?.description ||
-                  `Repository maintained by @Seavik2142.`,
+                  `Public repository maintained by @Seavik2142.`,
                 language: r.language || fb?.language || 'Python',
               };
-            });
+            })
+            .sort(
+              (a, b) =>
+                new Date(b.pushed_at || 0).getTime() - new Date(a.pushed_at || 0).getTime()
+            );
           setRepos(merged);
         }
       }
@@ -124,6 +132,13 @@ export function App() {
 
   useEffect(() => {
     syncLiveProfile();
+    const interval = setInterval(syncLiveProfile, 60000);
+    const onFocus = () => syncLiveProfile();
+    window.addEventListener('focus', onFocus);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', onFocus);
+    };
   }, []);
 
   const filteredFeaturedProjects = useMemo(() => {
@@ -474,7 +489,7 @@ export function App() {
               <div className="pt-5 border-t border-zinc-800/80">
                 <div className="flex items-center justify-between text-xs text-zinc-400 mb-2.5">
                   <span className="font-medium text-zinc-300">Primary Languages</span>
-                  <span>Across 23 repositories</span>
+                  <span>Across {user.public_repos || repos.length} repositories</span>
                 </div>
 
                 <div className="w-full h-2 rounded-full bg-zinc-900 overflow-hidden flex gap-0.5">
@@ -650,7 +665,7 @@ export function App() {
 
         {/* SECTION 4: CONTRIBUTION ACTIVITY & SNAKE */}
         <section id="telemetry">
-          <InteractiveSnakeCard />
+          <InteractiveSnakeCard repos={repos} user={user} refreshTrigger={refreshTrigger} />
         </section>
 
         {/* SECTION 5: TECHNICAL STACK & CREDENTIALS */}
@@ -768,11 +783,17 @@ export function App() {
         <section id="repositories" className="surface-card rounded-2xl p-6 sm:p-8">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-6 border-b border-zinc-800/80">
             <div>
-              <h2 className="text-xl sm:text-2xl font-semibold text-zinc-50 tracking-tight">
-                Public Repositories
-              </h2>
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h2 className="text-xl sm:text-2xl font-semibold text-zinc-50 tracking-tight">
+                  Public Repositories
+                </h2>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>{repos.length} Live Repositories</span>
+                </span>
+              </div>
               <p className="text-sm text-zinc-400 mt-1">
-                Browse all {repos.length} public repositories synced from github.com/Seavik2142.
+                Sorted by latest GitHub push activity from github.com/Seavik2142.
               </p>
             </div>
 
